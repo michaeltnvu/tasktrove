@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 
 const EditProjectModal = ({ isOpen, onClose, onSubmit, project }) => {
-  const [editedProject, setEditedProject] = useState({ ...project });
+  const [editedProject, setEditedProject] = useState({
+    ...project,
+    title: project?.title || "",
+    description: project?.description || "",
+  });
 
   useEffect(() => {
     if (project) {

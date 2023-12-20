@@ -8,8 +8,9 @@ const TaskContainer = ({
   onEditTask,
 }) => {
   return (
-    <div>
-      <h3>{title}</h3>
+    <div className="col card mt-2 mx-2 overflow-auto">
+      <h3 className="text-center card-header">{title}</h3>
+      <br />
       <div className="task-card">
         {list.map((task) => (
           <TaskCard

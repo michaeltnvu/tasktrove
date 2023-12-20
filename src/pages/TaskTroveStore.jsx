@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 import { API_URL } from "../services/API_URL";
 
 const TaskTroveStore = () => {
@@ -15,6 +17,7 @@ const TaskTroveStore = () => {
 
   return (
     <div>
+      <Header />
       <h1>Task Trove Store</h1>
       <ul>
         {products.map((product) => (
@@ -22,6 +25,7 @@ const TaskTroveStore = () => {
         ))}
       </ul>
       <Link to="/tasktrove">Back</Link>
+      <Footer />
     </div>
   );
 };

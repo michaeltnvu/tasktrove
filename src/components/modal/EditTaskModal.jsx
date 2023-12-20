@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const EditTaskModal = ({ isOpen, onClose, onUpdateTask, task }) => {
   const [editedTask, setEditedTask] = useState({
     ...task,
-    points: task?.points || 5,
+    points: task?.points || "0",
   });
 
   useEffect(() => {

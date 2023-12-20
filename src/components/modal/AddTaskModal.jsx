@@ -4,7 +4,7 @@ const AddTaskModal = ({ isOpen, onClose, onSubmit }) => {
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
-    points: "",
+    points: "0",
     assignee: "",
     status: "To-Do",
     priority: "Medium",
@@ -17,7 +17,7 @@ const AddTaskModal = ({ isOpen, onClose, onSubmit }) => {
     setNewTask({
       title: "",
       description: "",
-      points: "",
+      points: "0",
       assignee: "",
       status: "To-Do",
       priority: "Medium",

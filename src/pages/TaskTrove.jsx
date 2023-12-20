@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import TaskContainer from "../components/TaskContainer";
 import AddProjectModal from "../components/modal/AddProjectModal";
@@ -16,7 +16,7 @@ const TaskTrove = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [taskList, setTaskList] = useState([]);
-
+  const [sidebar, setSidebar] = useState(false);
   const toDoList = taskList.filter((task) => task.status === "To-Do");
   const inProgressList = taskList.filter(
     (task) => task.status === "In-Progress"
@@ -93,6 +93,7 @@ const TaskTrove = () => {
   const handleAddTask = ({
     title,
     description,
+    points,
     assignee,
     status,
     priority,
@@ -103,6 +104,7 @@ const TaskTrove = () => {
       projectId: selectedProject.id,
       title,
       description,
+      points,
       assignee,
       status,
       priority,
@@ -159,8 +161,10 @@ const TaskTrove = () => {
 
   return (
     <div>
-      <Navbar />
+      <Header />
       <Sidebar
+        sidebar={sidebar}
+        setSidebar={setSidebar}
         projects={projects}
         onProjectClick={handleProjectClick}
         handleNewProjectClick={() => setProjectModalToggle(true)}
@@ -169,28 +173,31 @@ const TaskTrove = () => {
         handleNewTaskClick={() => setTaskModalToggle(true)}
         onEditProject={handleEditProjectClick}
       />
-      <div className="kanban-board">
-        <TaskContainer
-          title="To-Do"
-          list={toDoList}
-          onStatusChange={handleTaskStatusChange}
-          onDeleteTask={handleDeleteTask}
-          onEditTask={handleEditTask}
-        />
-        <TaskContainer
-          title="In-Progress"
-          list={inProgressList}
-          onStatusChange={handleTaskStatusChange}
-          onDeleteTask={handleDeleteTask}
-          onEditTask={handleEditTask}
-        />
-        <TaskContainer
-          title="Completed"
-          list={completedList}
-          onStatusChange={handleTaskStatusChange}
-          onDeleteTask={handleDeleteTask}
-          onEditTask={handleEditTask}
-        />
+
+      <div className="container">
+        <div className="row align-items-start">
+          <TaskContainer
+            title="To-Do"
+            list={toDoList}
+            onStatusChange={handleTaskStatusChange}
+            onDeleteTask={handleDeleteTask}
+            onEditTask={handleEditTask}
+          />
+          <TaskContainer
+            title="In-Progress"
+            list={inProgressList}
+            onStatusChange={handleTaskStatusChange}
+            onDeleteTask={handleDeleteTask}
+            onEditTask={handleEditTask}
+          />
+          <TaskContainer
+            title="Completed"
+            list={completedList}
+            onStatusChange={handleTaskStatusChange}
+            onDeleteTask={handleDeleteTask}
+            onEditTask={handleEditTask}
+          />
+        </div>
       </div>
       <Footer />
       <AddProjectModal
