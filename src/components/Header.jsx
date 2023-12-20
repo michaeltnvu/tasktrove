@@ -1,6 +1,6 @@
 import { Container, Nav, Navbar } from "react-bootstrap";
 
-const Header = () => {
+const Header = ({ activeProject }) => {
   return (
     <Navbar expand="xl" className="bg-body-tertiary">
       <Container>
@@ -14,6 +14,9 @@ const Header = () => {
         >
           Projects
         </button>
+        <p className="ms-3 mt-3">
+          Current project: {activeProject ? activeProject.title : null}
+        </p>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">

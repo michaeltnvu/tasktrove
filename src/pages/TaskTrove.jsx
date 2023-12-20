@@ -4,13 +4,11 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import TaskContainer from "../components/TaskContainer";
-import AddProjectModal from "../components/modal/AddProjectModal";
 import AddTaskModal from "../components/modal/AddTaskModal";
 import EditProjectModal from "../components/modal/EditProjectModal";
 import { MOCK_API_URL } from "../services/MOCK_API_URL";
 
 const TaskTrove = () => {
-  const [projectModalToggle, setProjectModalToggle] = useState(false);
   const [editProjectModalToggle, setEditProjectModalToggle] = useState(false);
   const [taskModalToggle, setTaskModalToggle] = useState(false);
   const [projects, setProjects] = useState([]);
@@ -35,8 +33,7 @@ const TaskTrove = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  const handleProjectClick = (project) =>
-    setSelectedProject(project === selectedProject ? null : project);
+  const handleProjectClick = (project) => setSelectedProject(project);
 
   useEffect(() => {
     if (selectedProject) {
@@ -161,17 +158,17 @@ const TaskTrove = () => {
 
   return (
     <div>
-      <Header />
+      <Header activeProject={selectedProject} />
       <Sidebar
         sidebar={sidebar}
         setSidebar={setSidebar}
         projects={projects}
         onProjectClick={handleProjectClick}
-        handleNewProjectClick={() => setProjectModalToggle(true)}
         onDeleteProject={handleDeleteProject}
         activeProject={selectedProject}
         handleNewTaskClick={() => setTaskModalToggle(true)}
         onEditProject={handleEditProjectClick}
+        onSubmit={handleAddProject}
       />
 
       <div className="container">
@@ -200,11 +197,7 @@ const TaskTrove = () => {
         </div>
       </div>
       <Footer />
-      <AddProjectModal
-        isOpen={projectModalToggle}
-        onClose={() => setProjectModalToggle(false)}
-        onSubmit={handleAddProject}
-      />
+
       <AddTaskModal
         isOpen={taskModalToggle}
         onClose={() => setTaskModalToggle(false)}

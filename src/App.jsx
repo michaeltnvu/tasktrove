@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import AboutPage from "./pages/AboutPage";
 import TaskTrove from "./pages/TaskTrove";
 import TaskTroveStore from "./pages/TaskTroveStore";
@@ -7,6 +7,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
+        <Route path="/" element={<Navigate to="/tasktrove" />} />
         <Route path="/tasktrove" element={<TaskTrove />} />
         <Route path="/tasktrove/about" element={<AboutPage />} />
         <Route path="/tasktrove/store" element={<TaskTroveStore />} />
