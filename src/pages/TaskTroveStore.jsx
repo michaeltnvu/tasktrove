@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -16,15 +17,17 @@ const TaskTroveStore = () => {
   }, []);
 
   return (
-    <div>
+    <div className="d-flex flex-column min-vh-100">
       <Header />
-      <h1>Task Trove Store</h1>
-      <ul>
-        {products.map((product) => (
-          <li key={product.id}>{product.title}</li>
-        ))}
-      </ul>
-      <Link to="/tasktrove">Back</Link>
+      <Container>
+        <h1>Task Trove Store</h1>
+        <ul>
+          {products.map((product) => (
+            <li key={product.id}>{product.title}</li>
+          ))}
+        </ul>
+        <Link to="/tasktrove">Back</Link>
+      </Container>
       <Footer />
     </div>
   );

@@ -1,21 +1,18 @@
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
 
-const Header = ({ activeProject }) => {
+const Header = ({ activeProject, handleShow }) => {
   return (
     <Navbar expand="xl" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="/tasktrove">Task Trove</Navbar.Brand>
-        <button
-          className="btn btn-primary"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasExample"
-          aria-controls="offcanvasExample"
-        >
-          Projects
-        </button>
+        <Button variant="primary" onClick={handleShow}>
+          Project List
+        </Button>
         <p className="ms-3 mt-3">
-          Current project: {activeProject ? activeProject.title : null}
+          Current project:{" "}
+          {activeProject ? (
+            <div className="fw-bold d-inline">{activeProject.title}</div>
+          ) : null}
         </p>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

@@ -7,12 +7,23 @@ const TaskContainer = ({
   onDeleteTask,
   onEditTask,
 }) => {
+  const sortedList = [...list].sort((a, b) => {
+    const dateA = new Date(a.dueDate);
+    const dateB = new Date(b.dueDate);
+    return dateA - dateB;
+  });
+
   return (
-    <div className="col card mt-2 mx-2 overflow-auto">
-      <h3 className="text-center card-header">{title}</h3>
+    <div className="col card my-2 mx-1">
+      <h3 className="text-center card-header">
+        {title} ({sortedList.length})
+      </h3>
       <br />
-      <div className="task-card">
-        {list.map((task) => (
+      <div
+        className="task-card"
+        style={{ maxHeight: "76vh", overflowY: "auto" }}
+      >
+        {sortedList.map((task) => (
           <TaskCard
             key={task.id}
             task={task}

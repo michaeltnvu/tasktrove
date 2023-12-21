@@ -1,11 +1,12 @@
+import { Container } from "react-bootstrap";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 const AboutPage = () => {
   return (
-    <div>
+    <div className="d-flex flex-column min-vh-100">
       <Header />
-      <div>
+      <Container>
         <h2>Greetings, Task Trove Explorers!</h2>
 
         <p>
@@ -75,7 +76,7 @@ const AboutPage = () => {
           Start Earning, Start Redeeming – Welcome to Task Trove! #TaskTrove
           #ProductivityRewarded #TaskTroveJourney
         </p>
-      </div>
+      </Container>
       <Footer />
     </div>
   );

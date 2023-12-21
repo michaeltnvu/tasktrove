@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
@@ -9,12 +10,25 @@ import EditProjectModal from "../components/modal/EditProjectModal";
 import { MOCK_API_URL } from "../services/MOCK_API_URL";
 
 const TaskTrove = () => {
-  const [editProjectModalToggle, setEditProjectModalToggle] = useState(false);
-  const [taskModalToggle, setTaskModalToggle] = useState(false);
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [taskList, setTaskList] = useState([]);
-  const [sidebar, setSidebar] = useState(false);
+  const [show, setShow] = useState(false);
+  const [editProjectModal, setEditProjectModal] = useState(false);
+  const [addTaskModal, setAddTaskModal] = useState(false);
+
+  // New Project Modal Toggle
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+
+  // Edit Project Modal Toggle
+  const handleEditProjectShow = () => setEditProjectModal(true);
+  const handleEditProjectClose = () => setEditProjectModal(false);
+
+  // New Task Modal Toggle
+  const handleAddTaskShow = () => setAddTaskModal(true);
+  const handleAddTaskClose = () => setAddTaskModal(false);
+
   const toDoList = taskList.filter((task) => task.status === "To-Do");
   const inProgressList = taskList.filter(
     (task) => task.status === "In-Progress"
@@ -59,8 +73,6 @@ const TaskTrove = () => {
     setProjects([...projects, newProject]);
   };
 
-  const handleEditProjectClick = () => setEditProjectModalToggle(true);
-
   const handleEditProject = (updatedProject) => {
     axios
       .put(`${MOCK_API_URL}/projects/${updatedProject.id}`, updatedProject)
@@ -73,7 +85,6 @@ const TaskTrove = () => {
         setSelectedProject(updatedProject);
       })
       .catch((err) => console.log(err));
-    setEditProjectModalToggle(false);
   };
 
   const handleDeleteProject = (projectId) => {
@@ -157,21 +168,21 @@ const TaskTrove = () => {
   };
 
   return (
-    <div>
-      <Header activeProject={selectedProject} />
+    <div className="d-flex flex-column min-vh-100">
+      <Header activeProject={selectedProject} handleShow={handleShow} />
       <Sidebar
-        sidebar={sidebar}
-        setSidebar={setSidebar}
         projects={projects}
         onProjectClick={handleProjectClick}
         onDeleteProject={handleDeleteProject}
         activeProject={selectedProject}
-        handleNewTaskClick={() => setTaskModalToggle(true)}
-        onEditProject={handleEditProjectClick}
+        handleAddTaskShow={handleAddTaskShow}
         onSubmit={handleAddProject}
+        show={show}
+        handleClose={handleClose}
+        handleEditProjectShow={handleEditProjectShow}
       />
 
-      <div className="container">
+      <Container>
         <div className="row align-items-start">
           <TaskContainer
             title="To-Do"
@@ -195,19 +206,19 @@ const TaskTrove = () => {
             onEditTask={handleEditTask}
           />
         </div>
-      </div>
+      </Container>
       <Footer />
 
       <AddTaskModal
-        isOpen={taskModalToggle}
-        onClose={() => setTaskModalToggle(false)}
         onSubmit={handleAddTask}
+        addTaskModal={addTaskModal}
+        handleAddTaskClose={handleAddTaskClose}
       />
       <EditProjectModal
-        isOpen={editProjectModalToggle}
-        onClose={() => setEditProjectModalToggle(false)}
         onSubmit={handleEditProject}
         project={selectedProject}
+        handleEditProjectClose={handleEditProjectClose}
+        show={editProjectModal}
       />
     </div>
   );
