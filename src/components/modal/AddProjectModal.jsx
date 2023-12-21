@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -9,17 +10,23 @@ const AddProjectModal = ({ onSubmit }) => {
   const [description, setDescription] = useState("");
   const [show, setShow] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ title, description });
-    setShowToast(true);
-    setTitle("");
-    setDescription("");
-    handleClose();
+    if (isFormValid()) {
+      setShowAlert(false);
+      onSubmit({ title, description });
+      setShowToast(true);
+      setTitle("");
+      setDescription("");
+      handleClose();
+    } else {
+      setShowAlert(true);
+    }
   };
 
   const handleCancel = () => {
@@ -28,7 +35,14 @@ const AddProjectModal = ({ onSubmit }) => {
     handleClose();
   };
 
-  const handleCloseToast = () => setShowToast(false);
+  const handleCloseToast = () => {
+    setShowToast(false);
+    setShowAlert(false);
+  };
+
+  const isFormValid = () => {
+    return title.trim() !== "" && description.trim() !== "";
+  };
 
   return (
     <div>
@@ -64,6 +78,11 @@ const AddProjectModal = ({ onSubmit }) => {
           <Modal.Title>New project details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {showAlert && (
+            <Alert variant="danger" className="text-center">
+              Please fill in all fields.
+            </Alert>
+          )}
           <Form>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="projectTitle">Project Title</Form.Label>

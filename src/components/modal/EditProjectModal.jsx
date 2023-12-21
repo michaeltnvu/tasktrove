@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Toast } from "react-bootstrap";
+import { Alert, Toast } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -16,6 +16,7 @@ const EditProjectModal = ({
     description: project?.description || "",
   });
   const [showToast, setShowToast] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     if (project) {
@@ -29,9 +30,14 @@ const EditProjectModal = ({
   };
 
   const handleUpdate = () => {
-    onSubmit(editedProject);
-    setShowToast(true);
-    handleEditProjectClose();
+    if (isFormValid()) {
+      setShowAlert(false);
+      onSubmit(editedProject);
+      setShowToast(true);
+      handleEditProjectClose();
+    } else {
+      setShowAlert(true);
+    }
   };
 
   const handleCancel = () => {
@@ -39,7 +45,17 @@ const EditProjectModal = ({
     handleEditProjectClose();
   };
 
-  const handleCloseToast = () => setShowToast(false);
+  const handleCloseToast = () => {
+    setShowToast(false);
+    setShowAlert(false);
+  };
+
+  const isFormValid = () => {
+    return (
+      editedProject.title.trim() !== "" &&
+      editedProject.description.trim() !== ""
+    );
+  };
 
   return (
     <div>
@@ -53,6 +69,11 @@ const EditProjectModal = ({
           <Modal.Title>Task Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {showAlert && (
+            <Alert variant="danger" className="text-center">
+              Please fill in all fields.
+            </Alert>
+          )}
           <Form>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="projectTitle">Title</Form.Label>

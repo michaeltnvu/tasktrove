@@ -13,31 +13,37 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
     assignee: "",
     status: "To-Do",
     priority: "Medium",
-    dueDate: "",
+    dueDate: new Date().toISOString().split("T")[0],
   });
   const [showToast, setShowToast] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [showInputAlert, setShowInputAlert] = useState(false);
 
   const currentDate = new Date().toISOString().split("T")[0];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (newTask.dueDate < currentDate) {
-      setShowAlert(true);
-      return;
+    if (isFormValid()) {
+      setShowInputAlert(false);
+      if (newTask.dueDate < currentDate) {
+        setShowAlert(true);
+        return;
+      }
+      onSubmit(newTask);
+      setShowToast(true);
+      setNewTask({
+        title: "",
+        description: "",
+        points: "5",
+        assignee: "",
+        status: "To-Do",
+        priority: "Medium",
+        dueDate: new Date().toISOString().split("T")[0],
+      });
+      handleAddTaskClose();
+    } else {
+      setShowInputAlert(true);
     }
-    onSubmit(newTask);
-    setShowToast(true);
-    setNewTask({
-      title: "",
-      description: "",
-      points: "5",
-      assignee: "",
-      status: "To-Do",
-      priority: "Medium",
-      dueDate: "",
-    });
-    handleAddTaskClose();
   };
 
   const handleCancel = () => {
@@ -56,6 +62,15 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
   const handleCloseToast = () => {
     setShowToast(false);
     setShowAlert(false);
+    setShowInputAlert(false);
+  };
+
+  const isFormValid = () => {
+    return (
+      newTask.title.trim() !== "" &&
+      newTask.description.trim() !== "" &&
+      newTask.assignee.trim() !== ""
+    );
   };
 
   return (
@@ -75,6 +90,11 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
               We wish we could travel back in time, too. Try again.
             </Alert>
           )}
+          {showInputAlert && (
+            <Alert variant="danger" className="text-center">
+              Please fill in all fields.
+            </Alert>
+          )}
           <Form>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="taskTitle">Title</Form.Label>
@@ -82,10 +102,10 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
                 id="taskTitle"
                 type="text"
                 value={newTask.title}
-                required
                 onChange={(e) =>
                   setNewTask((prev) => ({ ...prev, title: e.target.value }))
                 }
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -94,13 +114,13 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
                 id="taskDescription"
                 type="text"
                 value={newTask.description}
-                required
                 onChange={(e) =>
                   setNewTask((prev) => ({
                     ...prev,
                     description: e.target.value,
                   }))
                 }
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -125,10 +145,10 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
                 id="taskAssignee"
                 type="text"
                 value={newTask.assignee}
-                required
                 onChange={(e) =>
                   setNewTask((prev) => ({ ...prev, assignee: e.target.value }))
                 }
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3">

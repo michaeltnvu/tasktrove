@@ -12,6 +12,7 @@ const EditTaskModal = ({ show, handleClose, onUpdateTask, task }) => {
   });
   const [showToast, setShowToast] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [showInputAlert, setShowInputAlert] = useState(false);
 
   const currentDate = new Date().toISOString().split("T")[0];
 
@@ -27,18 +28,32 @@ const EditTaskModal = ({ show, handleClose, onUpdateTask, task }) => {
   };
 
   const handleUpdate = () => {
-    if (editedTask.dueDate < currentDate) {
-      setShowAlert(true);
-      return;
+    if (isFormValid()) {
+      setShowInputAlert(false);
+      if (editedTask.dueDate < currentDate) {
+        setShowAlert(true);
+        return;
+      }
+      onUpdateTask(editedTask);
+      setShowToast(true);
+      handleClose();
+    } else {
+      setShowInputAlert(true);
     }
-    onUpdateTask(editedTask);
-    setShowToast(true);
-    handleClose();
   };
 
   const handleCloseToast = () => {
     setShowToast(false);
     setShowAlert(false);
+    setShowInputAlert(false);
+  };
+
+  const isFormValid = () => {
+    return (
+      editedTask.title.trim() !== "" &&
+      editedTask.description.trim() !== "" &&
+      editedTask.assignee.trim() !== ""
+    );
   };
 
   return (
@@ -56,6 +71,11 @@ const EditTaskModal = ({ show, handleClose, onUpdateTask, task }) => {
           {showAlert && (
             <Alert variant="danger" className="text-center">
               We wish we could travel back in time, too. Try again.
+            </Alert>
+          )}
+          {showInputAlert && (
+            <Alert variant="danger" className="text-center">
+              Please fill in all fields.
             </Alert>
           )}
           <Form>
