@@ -169,7 +169,7 @@ const TaskTrove = () => {
 
           setTimeout(() => {
             setToasts((prevToasts) => prevToasts.slice(1));
-          }, 2000);
+          }, 3000);
         })
         .catch((err) => {
           console.log("Error updating task status: ", err);
