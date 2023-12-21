@@ -97,11 +97,18 @@ const AddProjectModal = ({ onSubmit }) => {
         </Modal.Footer>
       </Modal>
       <Toast
+        bg="success"
         show={showToast}
         onClose={handleCloseToast}
         delay={3000}
         autohide
-        style={{ position: "fixed", bottom: 20, right: 20 }}
+        style={{
+          position: "fixed",
+          bottom: 20,
+          right: 20,
+          color: "white",
+          fontWeight: "bold",
+        }}
       >
         <Toast.Header>
           <strong className="me-auto">PROJECT CREATED!</strong>

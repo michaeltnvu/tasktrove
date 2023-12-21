@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -10,6 +11,9 @@ const EditTaskModal = ({ show, handleClose, onUpdateTask, task }) => {
     points: task?.points || "5",
   });
   const [showToast, setShowToast] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+
+  const currentDate = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     if (task) {
@@ -23,12 +27,19 @@ const EditTaskModal = ({ show, handleClose, onUpdateTask, task }) => {
   };
 
   const handleUpdate = () => {
+    if (editedTask.dueDate < currentDate) {
+      setShowAlert(true);
+      return;
+    }
     onUpdateTask(editedTask);
     setShowToast(true);
     handleClose();
   };
 
-  const handleCloseToast = () => setShowToast(false);
+  const handleCloseToast = () => {
+    setShowToast(false);
+    setShowAlert(false);
+  };
 
   return (
     <div>
@@ -42,6 +53,11 @@ const EditTaskModal = ({ show, handleClose, onUpdateTask, task }) => {
           <Modal.Title>Task Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {showAlert && (
+            <Alert variant="danger" className="text-center">
+              We wish we could travel back in time, too. Try again.
+            </Alert>
+          )}
           <Form>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="taskTitle">Title</Form.Label>
@@ -139,11 +155,19 @@ const EditTaskModal = ({ show, handleClose, onUpdateTask, task }) => {
         </Modal.Footer>
       </Modal>
       <Toast
+        bg="success"
         show={showToast}
         onClose={handleCloseToast}
         delay={3000}
         autohide
-        style={{ position: "fixed", bottom: 20, right: 20, zIndex: 1050 }}
+        style={{
+          position: "fixed",
+          bottom: 20,
+          right: 20,
+          zIndex: 1050,
+          color: "white",
+          fontWeight: "bold",
+        }}
       >
         <Toast.Header>
           <strong className="me-auto">TASK UPDATED!</strong>

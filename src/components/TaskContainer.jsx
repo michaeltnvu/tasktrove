@@ -14,7 +14,7 @@ const TaskContainer = ({
   });
 
   return (
-    <div className="col card my-2 mx-1">
+    <div className="col card my-2 mx-1" style={{}}>
       <h3 className="text-center card-header">
         {title} ({sortedList.length})
       </h3>

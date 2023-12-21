@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Alert } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -15,9 +16,16 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
     dueDate: "",
   });
   const [showToast, setShowToast] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+
+  const currentDate = new Date().toISOString().split("T")[0];
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (newTask.dueDate < currentDate) {
+      setShowAlert(true);
+      return;
+    }
     onSubmit(newTask);
     setShowToast(true);
     setNewTask({
@@ -45,7 +53,10 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
     handleAddTaskClose();
   };
 
-  const handleCloseToast = () => setShowToast(false);
+  const handleCloseToast = () => {
+    setShowToast(false);
+    setShowAlert(false);
+  };
 
   return (
     <div>
@@ -59,6 +70,11 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
           <Modal.Title>Task Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {showAlert && (
+            <Alert variant="danger" className="text-center">
+              We wish we could travel back in time, too. Try again.
+            </Alert>
+          )}
           <Form>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="taskTitle">Title</Form.Label>
@@ -166,11 +182,19 @@ const AddTaskModal = ({ onSubmit, addTaskModal, handleAddTaskClose }) => {
         </Modal.Footer>
       </Modal>
       <Toast
+        bg="success"
         show={showToast}
         onClose={handleCloseToast}
         delay={3000}
         autohide
-        style={{ position: "fixed", bottom: 20, right: 20, zIndex: 1050 }}
+        style={{
+          position: "fixed",
+          bottom: 20,
+          right: 20,
+          zIndex: 1050,
+          color: "white",
+          fontWeight: "bold",
+        }}
       >
         <Toast.Header>
           <strong className="me-auto">PROJECT CREATED!</strong>

@@ -88,11 +88,19 @@ const EditProjectModal = ({
         </Modal.Footer>
       </Modal>
       <Toast
+        bg="success"
         show={showToast}
         onClose={handleCloseToast}
         delay={3000}
         autohide
-        style={{ position: "fixed", bottom: 20, right: 20, zIndex: 1050 }}
+        style={{
+          position: "fixed",
+          bottom: 20,
+          right: 20,
+          zIndex: 1050,
+          color: "white",
+          fontWeight: "bold",
+        }}
       >
         <Toast.Header>
           <strong className="me-auto">PROJECT UPDATED!</strong>

@@ -1,7 +1,7 @@
 import { Col, Container, Row } from "react-bootstrap";
 
 const Footer = () => (
-  <footer className="py-3 border-top mt-auto">
+  <footer className="py-3 border-top mt-auto bg-body-tertiary">
     <Container>
       <Row>
         <Col className="d-flex justify-content-around">
