@@ -1,3 +1,4 @@
+import { useDrop } from "react-dnd";
 import TaskCard from "./TaskCard";
 
 const TaskContainer = ({
@@ -6,15 +7,25 @@ const TaskContainer = ({
   onStatusChange,
   onDeleteTask,
   onEditTask,
+  onTaskDrop,
 }) => {
+  const [, drop] = useDrop({
+    accept: "TASK",
+    drop: (item) => onDrop(item),
+  });
+
   const sortedList = [...list].sort((a, b) => {
     const dateA = new Date(a.dueDate);
     const dateB = new Date(b.dueDate);
     return dateA - dateB;
   });
 
+  const onDrop = (item) => {
+    onTaskDrop(item.id, title);
+  };
+
   return (
-    <div className="col card my-2 mx-1" style={{}}>
+    <div ref={drop} className="col card my-2 mx-1">
       <h3 className="text-center card-header">
         {title} ({sortedList.length})
       </h3>

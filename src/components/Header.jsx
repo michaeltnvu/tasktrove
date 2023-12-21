@@ -8,12 +8,12 @@ const Header = ({ activeProject, handleShow }) => {
         <Button variant="primary" onClick={handleShow}>
           Project List
         </Button>
-        <p className="ms-3 mt-3">
+        <div className="ms-3 mt-3">
           Current project:{" "}
           {activeProject ? (
             <div className="fw-bold d-inline">{activeProject.title}</div>
           ) : null}
-        </p>
+        </div>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">

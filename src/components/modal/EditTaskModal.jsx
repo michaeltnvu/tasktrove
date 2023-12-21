@@ -154,26 +154,30 @@ const EditTaskModal = ({ show, handleClose, onUpdateTask, task }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Toast
-        bg="success"
-        show={showToast}
-        onClose={handleCloseToast}
-        delay={3000}
-        autohide
-        style={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
-          zIndex: 1050,
-          color: "white",
-          fontWeight: "bold",
-        }}
-      >
-        <Toast.Header>
-          <strong className="me-auto">TASK UPDATED!</strong>
-        </Toast.Header>
-        <Toast.Body>Your task has been successfully updated!</Toast.Body>
-      </Toast>
+      <div className="toast-container">
+        <Toast
+          bg="success"
+          show={showToast}
+          onClose={handleCloseToast}
+          delay={2000}
+          autohide
+          className="toast-float-up"
+          style={{
+            position: "fixed",
+            bottom: 20,
+            right: 20,
+            zIndex: 1050,
+            color: "white",
+            fontWeight: "bold",
+            animation: "floatUp 3s ease-in-out",
+          }}
+        >
+          <Toast.Header>
+            <strong className="me-auto">TASK UPDATED!</strong>
+          </Toast.Header>
+          <Toast.Body>Your task has been successfully updated!</Toast.Body>
+        </Toast>
+      </div>
     </div>
   );
 };

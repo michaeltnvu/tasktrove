@@ -91,7 +91,7 @@ const EditProjectModal = ({
         bg="success"
         show={showToast}
         onClose={handleCloseToast}
-        delay={3000}
+        delay={2000}
         autohide
         style={{
           position: "fixed",
@@ -100,6 +100,7 @@ const EditProjectModal = ({
           zIndex: 1050,
           color: "white",
           fontWeight: "bold",
+          animation: "floatUp 3s ease-in-out",
         }}
       >
         <Toast.Header>

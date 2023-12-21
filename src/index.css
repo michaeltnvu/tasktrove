@@ -29,3 +29,12 @@ body {
 .task-card:hover::-webkit-scrollbar-thumb {
   background-color: #555;
 }
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}

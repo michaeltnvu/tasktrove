@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Toast, ToastContainer } from "react-bootstrap";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
@@ -16,6 +18,8 @@ const TaskTrove = () => {
   const [show, setShow] = useState(false);
   const [editProjectModal, setEditProjectModal] = useState(false);
   const [addTaskModal, setAddTaskModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toasts, setToasts] = useState([]);
 
   // New Project Modal Toggle
   const handleShow = () => setShow(true);
@@ -139,6 +143,41 @@ const TaskTrove = () => {
       .catch((err) => console.log(err));
   };
 
+  const handleTaskDrop = (taskId, newStatus) => {
+    const updatedTaskList = taskList.map((task) =>
+      task.id === taskId ? { ...task, status: newStatus } : task
+    );
+    setTaskList(updatedTaskList);
+
+    const currentStatus = taskList.find((task) => task.id === taskId)?.status;
+
+    if (currentStatus !== newStatus) {
+      axios
+        .put(`${MOCK_API_URL}/tasks/${taskId}`, {
+          ...taskList.find((task) => task.id === taskId),
+          status: newStatus,
+        })
+        .then((res) => {
+          console.log("Status updated successfully!");
+          setToasts([
+            ...toasts,
+            {
+              id: new Date().getTime(),
+              message: "Task updated successfully!",
+            },
+          ]);
+
+          setTimeout(() => {
+            setToasts((prevToasts) => prevToasts.slice(1));
+          }, 2000);
+        })
+        .catch((err) => {
+          console.log("Error updating task status: ", err);
+          setTaskList(taskList);
+        });
+    }
+  };
+
   const handleDeleteTask = (taskId) => {
     axios
       .delete(`${MOCK_API_URL}/tasks/${taskId}`)
@@ -168,59 +207,90 @@ const TaskTrove = () => {
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header activeProject={selectedProject} handleShow={handleShow} />
-      <Sidebar
-        projects={projects}
-        onProjectClick={handleProjectClick}
-        onDeleteProject={handleDeleteProject}
-        activeProject={selectedProject}
-        handleAddTaskShow={handleAddTaskShow}
-        onSubmit={handleAddProject}
-        show={show}
-        handleClose={handleClose}
-        handleEditProjectShow={handleEditProjectShow}
-      />
+    <DndProvider backend={HTML5Backend}>
+      <div className="d-flex flex-column min-vh-100">
+        <Header activeProject={selectedProject} handleShow={handleShow} />
+        <Sidebar
+          projects={projects}
+          onProjectClick={handleProjectClick}
+          onDeleteProject={handleDeleteProject}
+          activeProject={selectedProject}
+          handleAddTaskShow={handleAddTaskShow}
+          onSubmit={handleAddProject}
+          show={show}
+          handleClose={handleClose}
+          handleEditProjectShow={handleEditProjectShow}
+        />
 
-      <Container>
-        <div className="row align-items-start">
-          <TaskContainer
-            title="To-Do"
-            list={toDoList}
-            onStatusChange={handleTaskStatusChange}
-            onDeleteTask={handleDeleteTask}
-            onEditTask={handleEditTask}
-          />
-          <TaskContainer
-            title="In-Progress"
-            list={inProgressList}
-            onStatusChange={handleTaskStatusChange}
-            onDeleteTask={handleDeleteTask}
-            onEditTask={handleEditTask}
-          />
-          <TaskContainer
-            title="Completed"
-            list={completedList}
-            onStatusChange={handleTaskStatusChange}
-            onDeleteTask={handleDeleteTask}
-            onEditTask={handleEditTask}
-          />
-        </div>
-      </Container>
-      <Footer />
+        <Container>
+          <div className="row align-items-start">
+            <TaskContainer
+              title="To-Do"
+              list={toDoList}
+              onStatusChange={handleTaskStatusChange}
+              onDeleteTask={handleDeleteTask}
+              onEditTask={handleEditTask}
+              onTaskDrop={handleTaskDrop}
+            />
+            <TaskContainer
+              title="In-Progress"
+              list={inProgressList}
+              onStatusChange={handleTaskStatusChange}
+              onDeleteTask={handleDeleteTask}
+              onEditTask={handleEditTask}
+              onTaskDrop={handleTaskDrop}
+            />
+            <TaskContainer
+              title="Completed"
+              list={completedList}
+              onStatusChange={handleTaskStatusChange}
+              onDeleteTask={handleDeleteTask}
+              onEditTask={handleEditTask}
+              onTaskDrop={handleTaskDrop}
+            />
+          </div>
+        </Container>
+        <Footer />
 
-      <AddTaskModal
-        onSubmit={handleAddTask}
-        addTaskModal={addTaskModal}
-        handleAddTaskClose={handleAddTaskClose}
-      />
-      <EditProjectModal
-        onSubmit={handleEditProject}
-        project={selectedProject}
-        handleEditProjectClose={handleEditProjectClose}
-        show={editProjectModal}
-      />
-    </div>
+        <AddTaskModal
+          onSubmit={handleAddTask}
+          addTaskModal={addTaskModal}
+          handleAddTaskClose={handleAddTaskClose}
+        />
+        <EditProjectModal
+          onSubmit={handleEditProject}
+          project={selectedProject}
+          handleEditProjectClose={handleEditProjectClose}
+          show={editProjectModal}
+        />
+        <ToastContainer className="position-static">
+          {toasts.map((toast) => (
+            <Toast
+              key={toast.id}
+              bg="success"
+              show={true}
+              onClose={() => setToasts((prevToasts) => prevToasts.slice(1))}
+              delay={2000}
+              autohide
+              style={{
+                position: "absolute",
+                bottom: 20,
+                right: 20,
+                zIndex: 1050,
+                color: "white",
+                fontWeight: "bold",
+                animation: "floatUp 3s ease-in-out",
+              }}
+            >
+              <Toast.Header>
+                <strong className="me-auto">Task Updated!</strong>
+              </Toast.Header>
+              <Toast.Body>Your task has been successfully updated!</Toast.Body>
+            </Toast>
+          ))}
+        </ToastContainer>
+      </div>
+    </DndProvider>
   );
 };
 
